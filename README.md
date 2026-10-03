@@ -1,17 +1,6 @@
-## What you will do
-
-Write project information in `README.md`.
-
-## File
-
-```text
-README.md
-```
-
 ## Content
 
-```markdown
-# Lab 01: First Streamlit App
+# Lab 02: Streamlit Interactive Dashboard
 
 ## Project Theme
 
@@ -19,13 +8,29 @@ EduRisk Analytics
 
 ## Description
 
-This is my first Streamlit web app.
+This Streamlit app is an interactive student risk monitoring dashboard.
+
+This lab continues from Lab 01 and adds filters, charts, risk level calculation, and a risk checker form.
 
 ## Features
 
 - Sidebar navigation
-- Student data table
+- Home page
+- Interactive dashboard page
+- Student data page
+- Risk checker page
+- About page
+- Student dataset
+- Risk level calculation
 - Dashboard metrics
+- Course filter
+- Risk level filter
+- Minimum attendance slider
+- Minimum score slider
+- Show/hide filtered dataset checkbox
+- Bar charts
+- Download filtered data as CSV
+- Ethics reminder
 
 ## Tools Used
 
@@ -40,7 +45,6 @@ streamlit run app.py
 
 ## Student Information
 
-Name:
-Student ID:
+Name:<br>
+Student ID:<br>
 Class:
-```
