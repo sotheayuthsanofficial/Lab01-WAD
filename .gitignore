@@ -1,0 +1,5 @@
+.mysecret/
+.venv/
+__pycache__/
+.vscode/
+filtered_student_data.csv
