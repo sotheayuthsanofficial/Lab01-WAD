@@ -52,6 +52,6 @@ streamlit run app.py
 
 ## Student Information
 
-Name: San sotheayuth
-Student ID: 000073137
+Name: San sotheayuth<br>
+Student ID: 000073137<br>
 Class: M2
