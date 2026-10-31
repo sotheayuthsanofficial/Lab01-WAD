@@ -6,7 +6,7 @@ import plotly.express as px
 # PAGE CONFIG
 # =============================================================
 st.set_page_config(
-    page_title="EduRisk Analytics - Lab 03",
+    page_title="EduRisk Analytics - Lab 04",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -222,9 +222,14 @@ def get_risk_level(score, attendance):
 
 
 students_df["Risk Level"] = students_df.apply(
-    lambda row: get_risk_level(row["Score"], row["Attendance"]),
+    lambda row: get_risk_level(
+        row["Score"], 
+        row["Attendance"]),
     axis=1
 )
+
+if "risk_history" not in st.session_state:
+    st.session_state["risk_history"] = []
 
 # =============================================================
 # SIDEBAR NAVIGATION
@@ -232,6 +237,9 @@ students_df["Risk Level"] = students_df.apply(
 with st.sidebar:
     st.markdown(
         "<div style='text-align:center; padding: 0.4rem 0 1rem 0;'>"
+
+        # we use an external icon from icons8.com for the sidebar header
+        "<img src='https://img.icons8.com/ios-filled/50/FFFFFF/graduation-cap.png' width='40' style='margin-bottom:0.3rem;'/>"
         "<div style='font-weight:700; font-size:1.1rem;'>EduRisk Menu</div>"
         "<div style='font-size:0.78rem; opacity:0.75;'>Student Risk Monitoring</div>"
         "</div>",
@@ -258,12 +266,12 @@ if selected_page == "Home":
         "EduRisk Analytics",
         "Frontend Prototype with CSV Data Loading",
     )
-    st.write("Welcome to Lab 03.")
+    st.write("Welcome to Lab 04.")
     st.write(
         "In this lab, the app loads Student Data from students.csv "
         "using Pandas instead of storing data directly inside app.py."
     )
-    st.success("Lab 03 app is running successfully!")
+    st.success("Lab 04 app is running successfully!")
 
     st.markdown("####")
     c1, c2, c3 = st.columns(3)
@@ -445,6 +453,8 @@ elif selected_page == "Dashboard":
 # =============================================================
 # Student Data
 # =============================================================
+
+# Step 16: Keep the Student Data page from Lab 03
 elif selected_page == "Student Data":
     header("Student Data", "This page displays and inspects the dataset loaded from students.csv.")
 
@@ -491,53 +501,102 @@ elif selected_page == "Student Data":
 # =============================================================
 # RISK CHECKER
 # =============================================================
+
+# Step 17: Replace the old Risk Checker page
 elif selected_page == "Risk Checker":
+    # Step 18: Add the Risk Checker title and instruction
     header("Single Student Risk Checker", "Enter a score and attendance to check the risk level.")
 
     left, right = st.columns([1, 1])
 
     with left:
         with st.container(border=True):
+
+            # Step 19: Collect inputs in a Streamlit form
             with st.form("risk_checker_form"):
                 input_name = st.text_input("Student Name")
                 input_score = st.number_input("Score", 0, 100, 50)
                 input_attendance = st.number_input("Attendance", 0, 100, 50)
                 submitted = st.form_submit_button("Check Risk")
 
-    if submitted:
-        risk_result = get_risk_level(input_score, input_attendance)
+        # Step 20: Process inputs only after form submission
+        if submitted:
+            # Step 21: Validate that the student name is not empty
+            if input_name.strip() == "":
+                with right:
+                    st.warning("Please enter the student name.")
+            else:
+                # Step 22: Calculate risk after the name passes validation
+                risk_result = get_risk_level(input_score, input_attendance)
 
-        with right:
-            with st.container(border=True):
-                st.markdown("#### Result for **" + (input_name or "Student") + "**")
-                st.markdown(risk_badge(risk_result), unsafe_allow_html=True)
-                st.write("")
-                st.write("Score")
-                st.progress(int(input_score))
-                st.caption(str(input_score) + " / 100")
-                st.write("Attendance")
-                st.progress(int(input_attendance))
-                st.caption(str(input_attendance) + " / 100")
+                # Step 23: Create a dictionary for this risk check
+                result = {
+                    "Student Name": input_name.strip(),
+                    "Score": input_score,
+                    "Attendance": input_attendance,
+                    "Risk Level": risk_result
+                }
 
-                st.write("")
-                if risk_result == "Low Risk":
-                    st.success("Risk Level: Low Risk")
-                elif risk_result == "Medium Risk":
-                    st.warning("Risk Level: Medium Risk")
-                else:
-                    st.error("Risk Level: High Risk")
+                # Step 24: Save the result in session-state history
+                st.session_state["risk_history"].append(result)
+
+                # Step 25: Show supportive feedback for the risk level
+                with right:
+                    with st.container(border=True):
+                        st.markdown("#### Result for **" + input_name.strip() + "**")
+                        st.markdown(risk_badge(risk_result), unsafe_allow_html=True)
+                        # Step 26: Display the submitted score and attendance
+                        st.write("")
+                        st.write("Score")
+                        st.progress(int(input_score))
+                        st.caption(str(input_score) + " / 100")
+                        st.write("Attendance")
+                        st.progress(int(input_attendance))
+                        st.caption(str(input_attendance) + " / 100")
+
+                        st.write("")
+                        if risk_result == "Low Risk":
+                            st.success("Risk Level: Low Risk")
+                            st.write("Student appears on track.")
+                        elif risk_result == "Medium Risk":
+                            st.warning("Risk Level: Medium Risk")
+                            st.write("Monitor progress and provide guidance.")
+                        else:
+                            st.error("Risk Level: High Risk")
+                            st.write("Student may need additional support.")
+
+    # Step 27: Show recent history even when no new form was submitted
+    st.subheader("Recent Risk Checks")
+
+    # Step 28: Display saved risk checks in a table
+    if len(st.session_state["risk_history"]) > 0:
+        history_df = pd.DataFrame(st.session_state["risk_history"])
+        st.dataframe(style_risk_table(history_df), width="stretch")
+
+        # Step 29: Allow the user to clear session history
+        if st.button("Clear History"):
+            st.session_state["risk_history"] = []
+            st.success("Risk check history cleared.")
+    else:
+        st.info("No risk checks yet.")
+
+    # Step 30: Remind users to treat risk results as supportive guidance
+    st.warning(
+        "Ethics Reminder: Risk results should be used as guidance for support, "
+        "not as final judgment about a student."
+    )
 
 # =============================================================
 # ABOUT
 # =============================================================
 else:
     header("About", "Project and course information.")
-    st.write("This app is part of Lab 03.")
+    st.write("This app is part of Lab 04.")
     c1, c2 = st.columns([1.3, 1])
     with c1:
         st.write("**Course:** Web App Development for Data Science")
         st.write("**Project Theme:** EduRisk Analytics")
-        st.write("**Topic:** Data Loading, Layout, and Frontend Prototype")
+        st.write("**Topic:** Forms, Validation and Session State")
 
         st.markdown("##### Tools Used")
         t1, t2, t3, t4 = st.columns(4)
@@ -552,8 +611,8 @@ else:
                 )
 
     st.info(
-        "This frontend prototype loads real data from students.csv "
-        "and displays it using Streamlit and Pandas."
+        "This version improves the Risk Checker page using Streamlit forms, "
+        "input validation, and session state."
     )
 
     st.warning(
