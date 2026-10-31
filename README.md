@@ -1,4 +1,4 @@
-# Lab 03: Data Loading, Layout, and Frontend Prototype
+# Lab 04 : Form, Validation and Session state.
 
 ## Project Theme
 
@@ -8,7 +8,7 @@ EduRisk Analytics
 
 This Streamlit app is a frontend prototype for student academic monitoring.
 
-This lab continues from Lab 02 and moves the student dataset out of app.py into students.csv.
+This lab continues from Lab 02, Lab 03 and moves the student dataset out of app.py into students.csv.
 
 The app loads CSV data using Pandas and displays it in a cleaner Streamlit dashboard layout.
 
@@ -52,6 +52,6 @@ streamlit run app.py
 
 ## Student Information
 
-Name: San sotheayuth
-Student ID: 000073137
+Name: San sotheayuth<br>
+Student ID: 000073137<br>
 Class: M2
